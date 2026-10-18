@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Typing Dojo</title>
+  <meta name="description" content="Fight rivals with your keyboard. A tiny typing game that runs entirely in your browser.">
+  <meta name="theme-color" content="#120d2b">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="src/main.js"></script>
+</head>
+<body>
+  <main id="app">
+
+    <section id="screen-menu" class="screen" aria-labelledby="title">
+      <header class="hero">
+        <h1 id="title">Typing Dojo</h1>
+        <p>Type each word to strike your rival before their blade lands.</p>
+      </header>
+
+      <button id="daily-card" class="daily-card" type="button"></button>
+
+      <ol id="trial-list" class="trial-list"></ol>
+
+      <footer class="menu-footer">
+        <button type="button" class="link-btn js-mute"></button>
+        <button type="button" class="link-btn" id="btn-reset">Reset progress</button>
+      </footer>
+    </section>
+
+    <section id="screen-fight" class="screen" aria-label="Fight" hidden>
+      <div class="fight-top">
+        <button id="btn-retreat" class="link-btn" type="button">&larr; Retreat</button>
+        <h2 id="fight-title"></h2>
+        <button type="button" class="link-btn js-mute"></button>
+      </div>
+
+      <div class="bars">
+        <div class="bar-block">
+          <div class="bar-label"><span>You</span><span id="hp-player-text">100</span></div>
+          <div id="bar-player" class="bar" role="progressbar" aria-label="Your health" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+            <div id="hp-player" class="fill player"></div>
+          </div>
+        </div>
+        <div class="bar-block">
+          <div class="bar-label"><span id="rival-name"></span><span id="hp-enemy-text"></span></div>
+          <div id="bar-enemy" class="bar" role="progressbar" aria-label="Rival health" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+            <div id="hp-enemy" class="fill enemy"></div>
+          </div>
+        </div>
+      </div>
+
+      <canvas id="stage" class="stage" role="img" aria-label="A ninja duelling a rival in a moonlit dojo courtyard"></canvas>
+
+      <div class="meter" title="Rival's next strike"><div id="meter" class="meter-fill"></div></div>
+
+      <div id="word" class="word" role="img" aria-label="Type the word"><span id="word-done" class="done"></span><span id="word-cur" class="cur"></span><span id="word-rest"></span></div>
+
+      <p class="stats">
+        Combo <b id="stat-combo">0</b>
+        <span aria-hidden="true">·</span> WPM <b id="stat-wpm">–</b>
+        <span aria-hidden="true">·</span> Time <b id="stat-time">0:00</b>
+      </p>
+      <p class="hint">Type the word shown. Mistakes break your combo and let the rival strike sooner. Esc to retreat.</p>
+
+      <input id="kbd" class="kbd" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Keyboard input">
+    </section>
+
+  </main>
+
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="modal-card">
+      <h2 id="modal-title"></h2>
+      <p id="modal-sub" class="modal-sub"></p>
+      <div id="modal-stars" class="stars"></div>
+      <dl id="modal-stats" class="modal-stats"></dl>
+      <div class="modal-actions">
+        <button id="modal-next" class="btn primary" type="button">Next trial</button>
+        <button id="modal-retry" class="btn" type="button">Retry</button>
+        <button id="modal-menu" class="btn" type="button">Menu</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
