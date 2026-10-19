@@ -4,7 +4,8 @@ A small typing game that runs entirely in your browser. You are a ninja; each wo
 
 - Static site: plain HTML, CSS and JavaScript. No build step, no dependencies, no network calls.
 - Canvas-drawn dojo with animated fighters, slash effects and floating damage numbers.
-- 8 trials of rising difficulty, 1 to 3 stars each, plus a **Daily Challenge** that uses the same words for everyone on a given day.
+- **100 campaign levels** across 10 themed chapters, with a boss fight at the end of every chapter, rising word difficulty, and scaling enemy stats.
+- 1 to 3 stars per cleared level, persistent unlocks, chapter selection, plus a **Daily Challenge** that uses the same words for everyone on a given day.
 - A bundled vocabulary of **248,010 unique English words** (3–10 letters), available offline with no runtime API calls.
 - Length-filtered word pools are cached, keeping word selection efficient with the expanded dictionary.
 - Progress and the sound setting are saved in your browser (`localStorage`).
@@ -13,7 +14,7 @@ A small typing game that runs entirely in your browser. You are a ninja; each wo
 
 ## How to play
 
-1. Pick a trial from the menu. Trial 1 is open; winning a trial unlocks the next.
+1. Pick a level from the campaign. Level 1 is open; clear levels in order to unlock the next one. Every 10th level is a chapter boss. Use the chapter selector to revisit unlocked chapters.
 2. Type the word shown on screen, one letter at a time. Finishing a word strikes your rival.
 3. Consecutive clean words build a **combo**, which multiplies your damage (up to +100%).
 4. A wrong key breaks your combo and lets the rival strike sooner. Watch the bar under the dojo: when it fills, they attack.
