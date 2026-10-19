@@ -71,12 +71,30 @@ export function dailyTrial(key) {
 
 // ---------- fights ----------
 
+// Cache length-filtered pools: with a 248k-word corpus, filtering the whole bank
+// for every completed word would create avoidable work and garbage collection.
+const wordPoolCache = new WeakMap();
+
 export function pickWord(words, minLen, maxLen, rng, avoid = '') {
-  const pool = words.filter((w) => w.length >= minLen && w.length <= maxLen && w !== avoid);
+  let pools = wordPoolCache.get(words);
+  if (!pools) {
+    pools = new Map();
+    wordPoolCache.set(words, pools);
+  }
+  const key = `${minLen}:${maxLen}`;
+  let pool = pools.get(key);
+  if (!pool) {
+    pool = words.filter((w) => w.length >= minLen && w.length <= maxLen);
+    pools.set(key, pool);
+  }
   if (pool.length === 0) {
     throw new Error(`No words with length ${minLen}-${maxLen}`);
   }
-  return pool[Math.floor(rng() * pool.length)];
+  let word = pool[Math.floor(rng() * pool.length)];
+  if (pool.length > 1 && word === avoid) {
+    word = pool[(pool.indexOf(word) + 1 + Math.floor(rng() * (pool.length - 1))) % pool.length];
+  }
+  return word;
 }
 
 export function strikeDamage(wordLength, combo) {
