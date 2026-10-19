@@ -301,7 +301,12 @@ document.addEventListener('keydown', (e) => {
 el.kbd.addEventListener('input', () => {
   const v = el.kbd.value;
   el.kbd.value = '';
-  for (const ch of v) press(ch);
+  // Mobile IMEs can deliver multiple characters at once. Stop as soon as a
+  // character ends the fight so buffered input cannot leak into a finished round.
+  for (const ch of v) {
+    if (!run || run.state.status !== 'fighting') break;
+    press(ch);
+  }
 });
 
 el.fight.addEventListener('pointerdown', () => {

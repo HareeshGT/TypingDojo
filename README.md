@@ -5,6 +5,8 @@ A small typing game that runs entirely in your browser. You are a ninja; each wo
 - Static site: plain HTML, CSS and JavaScript. No build step, no dependencies, no network calls.
 - Canvas-drawn dojo with animated fighters, slash effects and floating damage numbers.
 - 8 trials of rising difficulty, 1 to 3 stars each, plus a **Daily Challenge** that uses the same words for everyone on a given day.
+- A bundled vocabulary of **248,010 unique English words** (3–10 letters), available offline with no runtime API calls.
+- Length-filtered word pools are cached, keeping word selection efficient with the expanded dictionary.
 - Progress and the sound setting are saved in your browser (`localStorage`).
 - Works with a physical keyboard or a phone's on-screen keyboard (tap the dojo to bring it up).
 - Respects `prefers-reduced-motion`.
@@ -89,7 +91,7 @@ Difficulty lives at the top of `src/engine.js`:
 - `STUMBLE_SECONDS`: how much sooner the rival strikes after a typo.
 - `STAR_ACCURACY`, `STAR_HP`: the star thresholds.
 
-Add or remove words in `src/words.js` (lowercase `a-z` only). Each trial picks from words within its length range.
+The bundled corpus lives in `src/word-bank-1.js` through `src/word-bank-5.js`; `src/words.js` combines the modules. It is sourced from [dwyl/english-words](https://github.com/dwyl/english-words), released under the Unlicense, and filtered to unique lowercase `a-z` words of 3–10 letters. The corpus is bundled locally so the game works offline. Update the source list and preserve the filters when refreshing it. Each trial picks from words within its length range.
 
 ## Security notes
 
