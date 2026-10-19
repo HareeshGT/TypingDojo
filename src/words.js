@@ -1,17 +1,13 @@
-// Word bank for Typing Dojo. Lowercase a-z only; the engine filters by length.
+// Word bank for Typing Dojo.
+// Source: dwyl/english-words (Unlicense), filtered to unique lowercase a-z words
+// between 3 and 10 letters. The split modules keep individual GitHub files manageable.
+import { WORDS_1 } from './word-bank-1.js';
+import { WORDS_2 } from './word-bank-2.js';
+import { WORDS_3 } from './word-bank-3.js';
+import { WORDS_4 } from './word-bank-4.js';
+import { WORDS_5 } from './word-bank-5.js';
+
 export const WORDS = Object.freeze([
-  'ink', 'oak', 'sun', 'fox', 'bow', 'ash', 'ice', 'owl', 'tea', 'fan', 'gem', 'jab',
-  'wind', 'fire', 'rain', 'moon', 'leaf', 'rock', 'sand', 'wave', 'iron', 'jade', 'fist',
-  'kick', 'bold', 'calm', 'dusk', 'dawn', 'mist', 'peak', 'reed', 'silk', 'tide', 'wolf',
-  'crow', 'claw', 'snow', 'bear', 'path', 'void',
-  'blade', 'storm', 'tiger', 'crane', 'stone', 'river', 'cloud', 'flame', 'spark', 'honor',
-  'focus', 'swift', 'shade', 'slash', 'eagle', 'sword', 'light', 'night', 'earth', 'quick',
-  'sharp', 'brave', 'tempo', 'grace', 'trial',
-  'shadow', 'dragon', 'spirit', 'master', 'temple', 'bamboo', 'breath', 'mirror', 'silent',
-  'strike', 'arrows', 'summit', 'garden', 'harbor', 'oracle',
-  'thunder', 'blossom', 'monsoon', 'warrior', 'courage', 'balance', 'lantern', 'crimson',
-  'whisper', 'journey', 'fortune', 'scholar', 'horizon',
-  'mountain', 'patience', 'fortress', 'strategy', 'guardian', 'champion', 'vigilant',
-  'lightning', 'tradition', 'spiritual', 'endurance', 'whirlwind', 'steadfast',
-  'discipline', 'determined', 'relentless', 'swordsmith', 'meditation',
+  ...WORDS_1, ...WORDS_2, ...WORDS_3, ...WORDS_4, ...WORDS_5,
 ]);
+export const WORD_COUNT = WORDS.length;
