@@ -9,16 +9,34 @@ export const INTRO_GRACE_SECONDS = 1;
 export const STAR_ACCURACY = 0.92;
 export const STAR_HP = 50;
 
-export const TRIALS = Object.freeze([
-  { id: 'gate',    name: 'Novice Gate',     rival: 'Gate Keeper',      blurb: 'Short words, slow strikes.',       hp: 60,  attackEvery: 3.0, attackDamage: 6,  minLen: 3, maxLen: 4 },
-  { id: 'bamboo',  name: 'Bamboo Grove',    rival: 'Grove Warden',     blurb: 'Warm up your fingers.',            hp: 90,  attackEvery: 2.8, attackDamage: 7,  minLen: 3, maxLen: 5 },
-  { id: 'river',   name: 'River Crossing',  rival: 'Ferry Duelist',    blurb: 'Steady rhythm wins the day.',      hp: 130, attackEvery: 2.6, attackDamage: 8,  minLen: 4, maxLen: 5 },
-  { id: 'temple',  name: 'Temple Steps',    rival: 'Temple Monk',      blurb: 'Longer words start to appear.',    hp: 170, attackEvery: 2.4, attackDamage: 8,  minLen: 4, maxLen: 6 },
-  { id: 'storm',   name: 'Storm Ridge',     rival: 'Storm Caller',     blurb: 'The wind will not wait.',          hp: 220, attackEvery: 2.2, attackDamage: 9,  minLen: 5, maxLen: 6 },
-  { id: 'shadow',  name: 'Shadow Hall',     rival: 'Shadow Stalker',   blurb: 'Keep your combo alive.',           hp: 280, attackEvery: 2.2, attackDamage: 8,  minLen: 5, maxLen: 7 },
-  { id: 'dragon',  name: "Dragon's Court",  rival: 'Dragon Guard',     blurb: 'Precision under pressure.',        hp: 330, attackEvery: 2.1, attackDamage: 9, minLen: 6, maxLen: 8 },
-  { id: 'master',  name: 'The Grandmaster', rival: 'Grandmaster',      blurb: 'The final trial.',                 hp: 400, attackEvery: 2.0, attackDamage: 9, minLen: 6, maxLen: 10 },
-].map((t) => Object.freeze(t)));
+const CHAPTERS = Object.freeze([
+  { name: 'Novice Valley', rival: 'Gate Keeper', places: ['Novice Gate','Bamboo Grove','River Crossing','Temple Steps','Storm Ridge','Shadow Hall','Dragon Court','Moon Bridge','Ember Shrine','Grandmaster Gate'] },
+  { name: 'Forgotten Kingdom', rival: 'Wandering Knight', places: ['Mossy Ruins','Crystal Pass','Sunken Library','Ironwood Forest','Frostfall Keep','Thunder Road','Obsidian Tower','Phantom Harbor','Starfall Arena','Kingdom Champion'] },
+  { name: 'Skybound Isles', rival: 'Sky Duelist', places: ['Cloud Pier','Wind Temple','Falcon Cliffs','Aurora Fields','Storm Citadel','Comet Garden','Celestial Steps','Nimbus Hall','Solar Spire','Sky Sovereign'] },
+  { name: 'Spirit Wilds', rival: 'Spirit Guardian', places: ['Whispering Marsh','Foxfire Trail','Moonlit Lake','Ancient Oak','Dreaming Vale','Echo Cavern','Wisp Meadow','Spirit Falls','Elder Sanctuary','Wilds Guardian'] },
+  { name: 'Crimson Frontier', rival: 'Crimson Ronin', places: ['Red Sand Pass','Ashen Outpost','Cinder Village','Scorching Bridge','Blood Moon Road','Blazing Canyon','Inferno Gate','Magma Fortress','Phoenix Summit','Crimson Warlord'] },
+  { name: 'Frozen Expanse', rival: 'Frost Samurai', places: ['Snowblind Trail','Icebound Camp','Glacier Run','Frozen Orchard','Whiteout Ridge','Crystal Glacier','Winter Palace','Frostfire Hall','Everfrost Citadel','Ice Emperor'] },
+  { name: 'Clockwork City', rival: 'Steel Automaton', places: ['Copper Alley','Gearworks Yard','Brass Market','Steamworks Lane','Pendulum Plaza','Clocktower Steps','Foundry District','Mech Arena','Timekeeper Vault','Grand Inventor'] },
+  { name: 'Abyssal Depths', rival: 'Abyss Watcher', places: ['Drowned Dock','Coral Maze','Pearl Grotto','Kelp Forest','Trench Crossing','Blackwater Hall','Leviathan Nest','Sunken Throne','Abyssal Gate','Deep Sea Tyrant'] },
+  { name: 'Mythic Summit', rival: 'Mythic Champion', places: ['Hero Road','Oracle Garden','Titan Steps','Phoenix Roost','Golem Quarry','Serpent Pass','Godswood Shrine','Eclipse Bridge','Mythic Arena','Legendary Champion'] },
+  { name: 'Eternal Dojo', rival: 'Eternal Master', places: ['First Light','Silent Courtyard','Hundred Blades Hall','Perfect Rhythm Path','Mastery Garden','Unbroken Focus','Endless Stairway','Eclipse Sanctuary','Beyond the Veil','The Eternal Grandmaster'] },
+]);
+export const CHAPTER_OPTIONS = Object.freeze(CHAPTERS.map((chapter) => chapter.name));
+export const TRIALS = Object.freeze(Array.from({ length: 100 }, (_, index) => {
+  const level = index + 1, chapterIndex = Math.floor(index / 10), withinChapter = index % 10;
+  const chapter = CHAPTERS[chapterIndex], boss = withinChapter === 9;
+  const minLen = Math.min(9, 3 + Math.floor(index / 12));
+  const maxLen = Math.min(10, minLen + (index < 12 ? 1 : 2));
+  return Object.freeze({
+    id: `level-${level}`, level, chapter: chapter.name, chapterIndex, boss,
+    name: chapter.places[withinChapter], rival: boss ? chapter.places[9] : chapter.rival,
+    blurb: boss ? `CHAPTER BOSS · ${chapter.name}` : `Level ${level} · ${minLen}–${maxLen} letter words`,
+    hp: Math.round(58 + index * 9 + Math.pow(index, 1.35) * 1.25),
+    attackEvery: Math.max(1.15, 3.15 - index * 0.018 - chapterIndex * 0.055),
+    attackDamage: Math.min(16, 5 + Math.floor(index / 12) + (boss ? 2 : 0)),
+    minLen, maxLen,
+  });
+}));
 
 // ---------- seeded randomness ----------
 
@@ -57,6 +75,7 @@ export function dailyKey(date = new Date()) {
 export function dailyTrial(key) {
   return Object.freeze({
     id: 'daily',
+    level: 0,
     name: 'Daily Challenge',
     rival: 'Wandering Ronin',
     blurb: 'Same words for everyone today.',
