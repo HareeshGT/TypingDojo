@@ -229,3 +229,16 @@ button { font: inherit; color: inherit; }
   .word.shake { animation: none; }
   .fill { transition: none; }
 }
+
+/* ---------- expanded campaign ---------- */
+.chapter-nav, .chapter-heading { grid-column: 1 / -1; }
+.chapter-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 2px; }
+.chapter-label, .campaign-eyebrow { color: var(--accent); font-size: .72rem; font-weight: 800; letter-spacing: .12em; }
+.chapter-select { width: min(100%, 390px); padding: 10px 12px; color: var(--ink); background: var(--panel); border: 1px solid #55458c; border-radius: 10px; font: inherit; }
+.chapter-heading { display: grid; gap: 3px; padding: 12px 14px; margin: 2px 0; border-left: 3px solid var(--accent); background: linear-gradient(90deg, rgba(233,196,106,.12), transparent); border-radius: 0 10px 10px 0; }
+.campaign-title { font-size: 1.15rem; }
+.campaign-subtitle { color: var(--muted); font-size: .85rem; }
+.boss-card { border-color: #a94d64; background: linear-gradient(115deg, #3c193a, var(--panel)); }
+.boss-card .trial-num { background: #ff758f; }
+.boss-card .trial-name { color: #ffb0bf; }
+@media (max-width: 620px) { .chapter-nav { align-items: stretch; flex-direction: column; } .chapter-select { width: 100%; } }
