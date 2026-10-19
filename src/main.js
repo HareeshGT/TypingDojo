@@ -1,6 +1,6 @@
 // Typing Dojo controller: wires the engine to the DOM, canvas scene, sound and storage.
 import {
-  TRIALS, PLAYER_MAX_HP, createFight, typeChar, tick, summarize,
+  TRIALS, CHAPTER_OPTIONS, PLAYER_MAX_HP, createFight, typeChar, tick, summarize,
   dailyKey, dailyTrial, emptyProgress, sanitizeProgress, recordResult, recordDaily,
 } from './engine.js';
 import { WORDS } from './words.js';
@@ -59,6 +59,7 @@ const sound = new Sound();
 sound.muted = loadMuted();
 
 let progress = loadProgress();
+let menuChapter = Math.floor((progress.unlocked - 1) / 10);
 let run = null; // { state, trial, daily, dailyKey, index, ended }
 let raf = 0;
 let lastTs = 0;
@@ -91,24 +92,51 @@ function renderMute() {
 
 function renderMenu() {
   el.trialList.replaceChildren();
-  TRIALS.forEach((trial, i) => {
+  const unlockedChapter = Math.floor((progress.unlocked - 1) / 10);
+  const selectorRow = make('li', 'chapter-nav');
+  const label = make('label', 'chapter-label', 'CAMPAIGN CHAPTER');
+  const select = make('select', 'chapter-select');
+  select.setAttribute('aria-label', 'Choose campaign chapter');
+  CHAPTER_OPTIONS.forEach((name, index) => {
+    const option = make('option', '', `Chapter ${index + 1} · ${name}`);
+    option.value = String(index);
+    option.disabled = index > unlockedChapter;
+    option.selected = index === Math.min(menuChapter, unlockedChapter);
+    select.append(option);
+  });
+  select.addEventListener('change', () => {
+    menuChapter = Number(select.value);
+    renderMenu();
+  });
+  selectorRow.append(label, select);
+  el.trialList.append(selectorRow);
+
+  const chapterStart = menuChapter * 10;
+  const chapterEnd = Math.min(TRIALS.length, chapterStart + 10);
+  const chapterHeading = make('li', 'chapter-heading');
+  chapterHeading.append(
+    make('span', 'campaign-eyebrow', `CHAPTER ${menuChapter + 1} / 10`),
+    make('strong', 'campaign-title', CHAPTER_OPTIONS[menuChapter]),
+    make('span', 'campaign-subtitle', `Levels ${chapterStart + 1}–${chapterEnd} · clear each level to unlock the next`),
+  );
+  el.trialList.append(chapterHeading);
+
+  TRIALS.slice(chapterStart, chapterEnd).forEach((trial, offset) => {
+    const i = chapterStart + offset;
     const locked = i >= progress.unlocked;
     const stars = progress.stars[trial.id] || 0;
     const li = make('li');
-    const btn = make('button', 'trial-card');
+    const btn = make('button', `trial-card${trial.boss ? ' boss-card' : ''}`);
     btn.type = 'button';
     btn.disabled = locked;
     btn.append(make('span', 'trial-num', String(i + 1)));
-
     const body = make('span', 'trial-body');
-    body.append(make('span', 'trial-name', trial.name));
-    body.append(make('span', 'trial-blurb', locked ? 'Locked: win the previous trial.' : trial.blurb));
+    body.append(make('span', 'trial-name', trial.boss ? `♛ ${trial.name}` : trial.name));
+    body.append(make('span', 'trial-blurb', locked ? 'Locked · clear the previous level' : trial.blurb));
     btn.append(body);
-
     const s = make('span', 'trial-stars', locked ? 'Locked' : starText(stars));
     if (!locked) s.setAttribute('aria-label', `${stars} of 3 stars`);
     btn.append(s);
-
     btn.addEventListener('click', () => startFight(trial, { index: i }));
     li.append(btn);
     el.trialList.append(li);
