@@ -8,3 +8,10 @@ EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s \
   CMD wget -qO- http://127.0.0.1:8080/ >/dev/null || exit 1
+
+# Optional independent keep-alive process; no-op when KEEP_ALIVE_URL is unset.
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+USER root
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+USER nginx
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
